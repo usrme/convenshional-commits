@@ -2,6 +2,8 @@
 
 A [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) helper using just Bash.
 
+![convenshional-commits-demo](https://user-images.githubusercontent.com/5902545/194108291-b30acd35-5548-4504-a4a0-37c7a16d76a0.gif)
+
 After forking [Comet](https://github.com/liamg/comet) into [Comet Alt](https://github.com/usrme/comet-alt) I got to thinking that something like that _really_ doesn't need Go, especially after I added the feature to choose without using arrow keys. This doesn't (yet) have niceties such as defining limits and being able to visualize those as one is typing, but this is close enough that I feel I can rely on just this instead.
 
 ## Installation
