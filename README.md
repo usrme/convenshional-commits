@@ -1,4 +1,4 @@
-# Convenshional Commits
+# ConvenSHional Commits
 
 A [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) helper using just Bash.
 
