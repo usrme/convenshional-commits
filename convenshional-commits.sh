@@ -48,6 +48,28 @@ function clear_lines() {
   return 0
 }
 
+function show_current_character_limit() {
+  # $1 - overall character limit
+  # $2 - the string whose length should be deducted
+  #      from the overall character limit
+
+  local character_limit="$1"
+  local deducted_string="$2"
+
+  deducted_string_length="${#deducted_string}"
+  column_length=$((character_limit-deducted_string_length))
+
+  # Deduct an additional 4 characters to account for
+  # padding used in actual output
+  #
+  # 4 because 2 is for the input line and the other 2
+  # is for this line's own padding
+  printf "%$((column_length-4))s \
+    $(echo -e "${ORANGE}* <- type until here (${column_length} left)${NOFORMAT}")" "" | \
+    tr " " " "
+  echo ""
+}
+
 if [[ $(git diff --no-ext-diff --cached --name-only) == "" ]]; then
   echo "Error: no files added to staging"
   exit 1
@@ -74,6 +96,16 @@ commit_question="What are you committing?"
 scope_question="What is the scope? (optional)"
 message_question="What is the commit message?"
 body_question="Do you need to specify a body/footer? (y/N)"
+
+# This number indicates the number of characters that have
+# to be deducted from the overall limit no matter what as
+# they are used for formatting
+deducted_characters="(): "
+deducted_character_count="${#deducted_characters}"
+
+# TODO: Read from file in 'XDG_HOME' for configurability
+character_limit=80
+((character_limit=character_limit-deducted_character_count))
 
 # Total lines to be cleared later: 2
 echo -e "\n    ${commit_question}\n"
@@ -109,15 +141,21 @@ echo -e "  ${commit_question} ${GREEN}${choice_type}: ${choice_desc}${NOFORMAT}"
 #-----------------------------------------------------------------------------
 # Prompt for scope
 #-----------------------------------------------------------------------------
-read -r -p "  ${scope_question} " scope
-clear_lines 1
+echo -e "  ${scope_question}"
+show_current_character_limit "$character_limit" "$choice_type"
+read -r -p "  " scope
+clear_lines 3
 echo -e "  ${scope_question} ${GREEN}${scope}${NOFORMAT}"
 
 #-----------------------------------------------------------------------------
 # Prompt for commit message
 #-----------------------------------------------------------------------------
-read -r -p "  ${message_question} " message
-clear_lines 1
+echo "  ${message_question}"
+# The characters we need to deduct now include the type of choice
+# made at the start and the scope that was input
+show_current_character_limit "$character_limit" "${choice_type}${scope}"
+read -r -p "  " message
+clear_lines 3
 echo -e "  ${message_question} ${GREEN}${message}${NOFORMAT}"
 
 #-----------------------------------------------------------------------------
