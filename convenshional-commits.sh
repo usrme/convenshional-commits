@@ -70,42 +70,78 @@ function show_current_character_limit() {
   echo ""
 }
 
+function set_default_choices() {
+  CHOICES[fix]="Bug fix. Correlates with PATCH in SemVer"; CHOICE_ORDERS+=("fix")
+  CHOICES[feat]="New feature. Correlates with MINOR in SemVer"; CHOICE_ORDERS+=("feat")
+  CHOICES[docs]="Changes to documentation or code comments"; CHOICE_ORDERS+=("docs")
+  CHOICES[style]="Changes that do not affect the meaning of the code (e.g. formatting)"; CHOICE_ORDERS+=("style")
+  CHOICES[refactor]="Changes that neither fix a bug nor add a feature"; CHOICE_ORDERS+=("refactor")
+  CHOICES[perf]="Changes that improve performance"; CHOICE_ORDERS+=("perf")
+  CHOICES[test]="Changes that add missing or corrects existing tests"; CHOICE_ORDERS+=("test")
+  CHOICES[build]="Changes to the build system or external dependencies"; CHOICE_ORDERS+=("build")
+  CHOICES[ci]="Changes to CI/CD configuration files or scripts"; CHOICE_ORDERS+=("ci")
+}
+
 if [[ $(git diff --no-ext-diff --cached --name-only) == "" ]]; then
   echo "Error: no files added to staging"
   exit 1
 fi
 
+CONFIG_DIR="${XDG_CONFIG_HOME:-"${HOME}/.config"}"
+CONFIG_FILE="${CONFIG_DIR}/$(basename "${BASH_SOURCE[0]%%.*}").conf"
+
 declare -A CHOICES
 declare -a CHOICE_ORDERS
-
-# Associative arrays do not keep ordering based on insertion, but on hash,
-# so keep a separate regular array that keeps insertion order and use that
-# later on for proper ordering
-# TODO: Read from file in 'XDG_HOME' for configurability
-CHOICES[fix]="Bug fix. Correlates with PATCH in SemVer"; CHOICE_ORDERS+=("fix")
-CHOICES[feat]="New feature. Correlates with MINOR in SemVer"; CHOICE_ORDERS+=("feat")
-CHOICES[docs]="Changes to documentation or code comments"; CHOICE_ORDERS+=("docs")
-CHOICES[style]="Changes that do not affect the meaning of the code (e.g. formatting)"; CHOICE_ORDERS+=("style")
-CHOICES[refactor]="Changes that neither fix a bug nor add a feature"; CHOICE_ORDERS+=("refactor")
-CHOICES[perf]="Changes that improve performance"; CHOICE_ORDERS+=("perf")
-CHOICES[test]="Changes that add missing or corrects existing tests"; CHOICE_ORDERS+=("test")
-CHOICES[build]="Changes to the build system or external dependencies"; CHOICE_ORDERS+=("build")
-CHOICES[ci]="Changes to CI/CD configuration files or scripts"; CHOICE_ORDERS+=("ci")
-
-commit_question="What are you committing?"
-scope_question="What is the scope? (optional)"
-message_question="What is the commit message?"
-body_question="Do you need to specify a body/footer? (y/N)"
 
 # This number indicates the number of characters that have
 # to be deducted from the overall limit no matter what as
 # they are used for formatting
 deducted_characters="(): "
 deducted_character_count="${#deducted_characters}"
+found_custom_character_limit="false"
 
-# TODO: Read from file in 'XDG_HOME' for configurability
-character_limit=80
+if [[ -e "$CONFIG_FILE" ]]; then
+  while IFS=': ' read -r key value; do
+    # Use 'total_input_char_limit' as a reserved key
+    # for configuring character count limit
+    #
+    # Using more awkward wording with 'total' at the front
+    # to make it clear it is a prefix that can be expanded
+    # to other types of limits in the future
+    #
+    # This also somewhat mirrors the configuration option
+    # available to be set in Comet Alt
+    if [[ "$key" == "total_input_char_limit" ]]; then
+      found_custom_character_limit="true"
+      character_limit="$value"
+      continue
+    fi
+
+    # Associative arrays do not keep ordering based on insertion, but on hash,
+    # so keep a separate regular array that keeps insertion order and use that
+    # later on for proper ordering
+    CHOICES["$key"]="$value"; CHOICE_ORDERS+=("$key")
+  done < "$CONFIG_FILE"
+else
+  # If no configuration file was found
+  set_default_choices
+fi
+
+if [[ "$found_custom_character_limit" == "true" && $(wc -l < "$CONFIG_FILE" ) -eq 1 ]]; then
+  # If only total input character limit was set in configuration file
+  set_default_choices
+fi
+
+if [[ "$found_custom_character_limit" == "false" ]]; then
+  character_limit=80
+fi
+
 ((character_limit=character_limit-deducted_character_count))
+
+commit_question="What are you committing?"
+scope_question="What is the scope? (optional)"
+message_question="What is the commit message?"
+body_question="Do you need to specify a body/footer? (y/N)"
 
 # Total lines to be cleared later: 2
 echo -e "\n    ${commit_question}\n"

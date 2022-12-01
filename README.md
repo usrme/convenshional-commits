@@ -13,7 +13,13 @@ After forking [Comet](https://github.com/liamg/comet) into [Comet Alt](https://g
 
 ## Usage
 
-Since I haven't added the ability to define choices in an external file then to edit any of the default choices you need to modify the script itself. The same goes for setting the visual character limit. Making the visual indicator optional is coming in the future. Any additional arguments are passed straight to `git commit`.
+There is an additional `convenshional-commits.conf` file that includes the prefixes and descriptions that I most prefer myself, which can be added to either `XDG_CONFIG_HOME` or one's home directory under `.config` as `convenshional-commits.conf`. Omitting this means that defaults are used.
+
+Any additional arguments are passed straight to `git commit`.
+
+### Setting character limits
+
+To adjust the total limit of characters in the _resulting_ commit message, add the key `total_input_char_limit` into the `.convenshional-commits.conf` file with the desired limit. Omitting the key uses a default value of 80 characters.
 
 ## License
 
