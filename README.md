@@ -21,6 +21,8 @@ Any additional arguments are passed straight to `git commit`.
 
 To adjust the total limit of characters in the _resulting_ commit message, add the key `total_input_char_limit` into the `convenshional-commits.conf` file with the desired limit. Omitting the key uses a default value of 80 characters.
 
+It goes without saying that since this character limit indicator expects there to be around 30 characters of additional space on the right side in order for the marker to make sense. Significantly narrower and it may make sense to just disable the visual indicator entirely by setting the value of `total_input_char_limit` to 0.
+
 ## License
 
 [MIT](/LICENSE)
