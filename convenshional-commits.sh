@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 #
 # A conventional commit helper using just Bash.
+#
+# Required executables: basename, echo, git, tput
 
 set -Eeuo pipefail
 
