@@ -136,6 +136,11 @@ if [[ "$found_custom_character_limit" == "false" ]]; then
   character_limit=80
 fi
 
+clear_count=2
+if [[ "$character_limit" -gt 0 ]]; then
+  clear_count=3
+fi
+
 ((character_limit=character_limit-deducted_character_count))
 
 commit_question="What are you committing?"
@@ -178,20 +183,24 @@ echo -e "  ${commit_question} ${GREEN}${choice_type}: ${choice_desc}${NOFORMAT}"
 # Prompt for scope
 #-----------------------------------------------------------------------------
 echo -e "  ${scope_question}"
-show_current_character_limit "$character_limit" "$choice_type"
+if [[ "$character_limit" -gt 0 ]]; then
+  show_current_character_limit "$character_limit" "$choice_type"
+fi
 read -r -p "  " scope
-clear_lines 3
+clear_lines "$clear_count"
 echo -e "  ${scope_question} ${GREEN}${scope}${NOFORMAT}"
 
 #-----------------------------------------------------------------------------
 # Prompt for commit message
 #-----------------------------------------------------------------------------
 echo "  ${message_question}"
-# The characters we need to deduct now include the type of choice
-# made at the start and the scope that was input
-show_current_character_limit "$character_limit" "${choice_type}${scope}"
+if [[ "$character_limit" -gt 0 ]]; then
+  # The characters we need to deduct now include the type of choice
+  # made at the start and the scope that was input
+  show_current_character_limit "$character_limit" "${choice_type}${scope}"
+fi
 read -r -p "  " message
-clear_lines 3
+clear_lines "$clear_count"
 echo -e "  ${message_question} ${GREEN}${message}${NOFORMAT}"
 
 #-----------------------------------------------------------------------------
