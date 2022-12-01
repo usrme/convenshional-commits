@@ -19,7 +19,7 @@ Any additional arguments are passed straight to `git commit`.
 
 ### Setting character limits
 
-To adjust the total limit of characters in the _resulting_ commit message, add the key `total_input_char_limit` into the `.convenshional-commits.conf` file with the desired limit. Omitting the key uses a default value of 80 characters.
+To adjust the total limit of characters in the _resulting_ commit message, add the key `total_input_char_limit` into the `convenshional-commits.conf` file with the desired limit. Omitting the key uses a default value of 80 characters.
 
 ## License
 
