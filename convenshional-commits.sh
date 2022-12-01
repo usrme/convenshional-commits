@@ -101,7 +101,9 @@ deducted_character_count="${#deducted_characters}"
 found_custom_character_limit="false"
 
 if [[ -e "$CONFIG_FILE" ]]; then
+  lines_in_conf_file=0
   while IFS=': ' read -r key value; do
+    ((lines_in_conf_file=lines_in_conf_file+1))
     # Use 'total_input_char_limit' as a reserved key
     # for configuring character count limit
     #
@@ -127,7 +129,7 @@ else
   set_default_choices
 fi
 
-if [[ "$found_custom_character_limit" == "true" && $(wc -l < "$CONFIG_FILE" ) -eq 1 ]]; then
+if [[ "$found_custom_character_limit" == "true" && "$lines_in_conf_file" -eq 1 ]]; then
   # If only total input character limit was set in configuration file
   set_default_choices
 fi
