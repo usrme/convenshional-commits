@@ -3,7 +3,7 @@
 # A conventional commit helper using just Bash.
 #
 # Required executables:
-# basename, bash, echo, env, git, printf, tput
+# basename, bash, echo, env, git, printf, tput, tr
 
 set -Eeuo pipefail
 
