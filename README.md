@@ -13,7 +13,7 @@ After forking [Comet](https://github.com/liamg/comet) into [Comet Alt](https://g
 
 ## Usage
 
-There is an additional `convenshional-commits.conf` file that includes the prefixes and descriptions that I most prefer myself, which can be added to either `XDG_CONFIG_HOME` or one's home directory under `.config` as `convenshional-commits.conf`. Omitting this means that defaults are used.
+There is an additional `convenshional-commits.conf` file that includes the prefixes and descriptions that I most prefer myself, which can be added to `${XDG_CONFIG_HOME}/convenshional-commits/config.conf`. Omitting this means that defaults are used.
 
 Any additional arguments are passed straight to `git commit`.
 

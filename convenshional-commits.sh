@@ -94,13 +94,27 @@ function set_default_choices() {
   CHOICE_ORDERS+=("ci")
 }
 
+function get_config_dir() {
+  local config_dir="${XDG_CONFIG_HOME:-}"
+  local application_name
+  application_name=$(basename "${BASH_SOURCE[0]%%.*}")
+
+  # If the value of the environment variable is unset, empty or not an absolute path, use the default
+  if [ -z "$config_dir" ] || [ "${config_dir::1}" != '/' ]; then
+    echo "${HOME}/.config/${application_name}"
+    return
+  fi
+
+  # The value of the environment variable is valid; use it
+  echo "${config_dir}/${application_name}"
+}
+
 if [[ $(git diff --no-ext-diff --cached --name-only) == "" ]]; then
   echo "Error: no files added to staging"
   exit 1
 fi
 
-CONFIG_DIR="${XDG_CONFIG_HOME:-"${HOME}/.config"}"
-CONFIG_FILE="${CONFIG_DIR}/$(basename "${BASH_SOURCE[0]%%.*}").conf"
+CONFIG_FILE="$(get_config_dir)/config.conf"
 
 declare -A CHOICES
 declare -a CHOICE_ORDERS
