@@ -60,29 +60,38 @@ function show_current_character_limit() {
   local deducted_string="$2"
 
   deducted_string_length="${#deducted_string}"
-  column_length=$((character_limit-deducted_string_length))
+  column_length=$((character_limit - deducted_string_length))
 
   # Deduct an additional 4 characters to account for
   # padding used in actual output
   #
   # 4 because 2 is for the input line and the other 2
   # is for this line's own padding
-  printf "%$((column_length-4))s \
-    $(echo -e "${ORANGE}* <- type until here (${column_length} left)${NOFORMAT}")" "" | \
+  printf "%$((column_length - 4))s \
+    $(echo -e "${ORANGE}* <- type until here (${column_length} left)${NOFORMAT}")" "" |
     tr " " " "
   echo ""
 }
 
 function set_default_choices() {
-  CHOICES[fix]="Bug fix. Correlates with PATCH in SemVer"; CHOICE_ORDERS+=("fix")
-  CHOICES[feat]="New feature. Correlates with MINOR in SemVer"; CHOICE_ORDERS+=("feat")
-  CHOICES[docs]="Changes to documentation or code comments"; CHOICE_ORDERS+=("docs")
-  CHOICES[style]="Changes that do not affect the meaning of the code (e.g. formatting)"; CHOICE_ORDERS+=("style")
-  CHOICES[refactor]="Changes that neither fix a bug nor add a feature"; CHOICE_ORDERS+=("refactor")
-  CHOICES[perf]="Changes that improve performance"; CHOICE_ORDERS+=("perf")
-  CHOICES[test]="Changes that add missing or corrects existing tests"; CHOICE_ORDERS+=("test")
-  CHOICES[build]="Changes to the build system or external dependencies"; CHOICE_ORDERS+=("build")
-  CHOICES[ci]="Changes to CI/CD configuration files or scripts"; CHOICE_ORDERS+=("ci")
+  CHOICES[fix]="Bug fix. Correlates with PATCH in SemVer"
+  CHOICE_ORDERS+=("fix")
+  CHOICES[feat]="New feature. Correlates with MINOR in SemVer"
+  CHOICE_ORDERS+=("feat")
+  CHOICES[docs]="Changes to documentation or code comments"
+  CHOICE_ORDERS+=("docs")
+  CHOICES[style]="Changes that do not affect the meaning of the code (e.g. formatting)"
+  CHOICE_ORDERS+=("style")
+  CHOICES[refactor]="Changes that neither fix a bug nor add a feature"
+  CHOICE_ORDERS+=("refactor")
+  CHOICES[perf]="Changes that improve performance"
+  CHOICE_ORDERS+=("perf")
+  CHOICES[test]="Changes that add missing or corrects existing tests"
+  CHOICE_ORDERS+=("test")
+  CHOICES[build]="Changes to the build system or external dependencies"
+  CHOICE_ORDERS+=("build")
+  CHOICES[ci]="Changes to CI/CD configuration files or scripts"
+  CHOICE_ORDERS+=("ci")
 }
 
 if [[ $(git diff --no-ext-diff --cached --name-only) == "" ]]; then
@@ -106,7 +115,7 @@ found_custom_character_limit="false"
 if [[ -e "$CONFIG_FILE" ]]; then
   lines_in_conf_file=0
   while IFS=': ' read -r key value; do
-    ((lines_in_conf_file=lines_in_conf_file+1))
+    ((lines_in_conf_file = lines_in_conf_file + 1))
     # Use 'total_input_char_limit' as a reserved key
     # for configuring character count limit
     #
@@ -125,7 +134,8 @@ if [[ -e "$CONFIG_FILE" ]]; then
     # Associative arrays do not keep ordering based on insertion, but on hash,
     # so keep a separate regular array that keeps insertion order and use that
     # later on for proper ordering
-    CHOICES["$key"]="$value"; CHOICE_ORDERS+=("$key")
+    CHOICES["$key"]="$value"
+    CHOICE_ORDERS+=("$key")
   done < "$CONFIG_FILE"
 else
   # If no configuration file was found
@@ -146,7 +156,7 @@ if [[ "$character_limit" -gt 0 ]]; then
   clear_count=3
 fi
 
-((character_limit=character_limit-deducted_character_count))
+((character_limit = character_limit - deducted_character_count))
 
 commit_question="What are you committing?"
 scope_question="What is the scope? (optional)"
@@ -162,7 +172,7 @@ setup_colors
 #-----------------------------------------------------------------------------
 index=0
 for choice in "${CHOICE_ORDERS[@]}"; do
-  ((index=index+1))
+  ((index = index + 1))
   printf '    %02d. %-12s %s\n' "$index" "$choice" "${CHOICES[$choice]}"
 done
 
@@ -178,9 +188,9 @@ fi
 #-----------------------------------------------------------------------------
 # Clear lines up until a certain amount
 #-----------------------------------------------------------------------------
-clear_lines $((index+4))
+clear_lines $((index + 4))
 
-choice_type="${CHOICE_ORDERS[$input-1]}"
+choice_type="${CHOICE_ORDERS[$input - 1]}"
 choice_desc="${CHOICES[$choice_type]}"
 echo -e "  ${commit_question} ${GREEN}${choice_type}: ${choice_desc}${NOFORMAT}"
 
