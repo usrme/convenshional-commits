@@ -2,7 +2,7 @@
 
 A [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) helper using mostly Bash.
 
-![convenshional-commits-demo](https://user-images.githubusercontent.com/5902545/195580236-f737842c-19d5-4bf3-81ff-ff6bd2451e18.gif)
+![ConvenSHional Commits - animated GIF demo](examples/demo.gif)
 
 After forking [Comet](https://github.com/liamg/comet) into [Comet Alt](https://github.com/usrme/comet-alt) I got to thinking that something like that _really_ doesn't need Go, especially after I added the feature to choose without using arrow keys.
 
