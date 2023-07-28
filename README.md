@@ -4,7 +4,7 @@ A [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) helper u
 
 ![ConvenSHional Commits - animated GIF demo](examples/demo.gif)
 
-After forking [Comet](https://github.com/liamg/comet) into [Comet Alt](https://github.com/usrme/comet-alt) I got to thinking that something like that _really_ doesn't need Go, especially after I added the feature to choose without using arrow keys.
+After spinning [Comet](https://github.com/liamg/comet) off into [Cometary](https://github.com/usrme/cometary) I got to thinking that something like that _really_ doesn't need Go, especially after I added the feature to choose without using arrow keys.
 
 ## Installation
 
